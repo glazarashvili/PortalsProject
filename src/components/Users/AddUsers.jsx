@@ -7,14 +7,17 @@ import classes from './AddUser.module.css'
 
 const AddUsers = ({ onAddUser }) => {
 
-  const [enteredAge, setEnteredAge] = React.useState('')
-  const [enteredUsername, setEnteredUsername] = React.useState('')
+  const nameInputRef = React.useRef()
+  const ageInputRef = React.useRef()
   const [error, setError] = React.useState()
 
   const addUserHandler = (e) => {
     e.preventDefault()
 
-    if(enteredUsername.trim().length === 0 || enteredAge === 0) {
+    const enteredName = nameInputRef.current.value
+    const enteredAge = ageInputRef.current.value
+
+    if(enteredName.trim().length === 0 || enteredAge === 0) {
       setError({
         title: 'Invalid input',
         message: 'Please enter a valid name and age'
@@ -29,24 +32,10 @@ const AddUsers = ({ onAddUser }) => {
       return
     }
 
-    console.log(enteredUsername, enteredAge)
-    onAddUser(enteredUsername, enteredAge)
-    setEnteredAge('')
-    setEnteredUsername('')
+    onAddUser(enteredName, enteredAge)
   }
 
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value)
-  }
-
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value)
-  }
-
-
-  const errorHandler = () => {
-    setError(null)
-  }
+  const errorHandler = () => setError(null)
   
   return (
     <React.Fragment>
@@ -56,16 +45,14 @@ const AddUsers = ({ onAddUser }) => {
           <label htmlFor='username'>Username</label>
           <input 
             id='username' 
-            value={enteredUsername} 
             tyoe='text' 
-            onChange={usernameChangeHandler} 
+            ref={nameInputRef}
           />
           <label htmlFor='age'>Age</label>
           <input 
             id='age' 
             tyoe='number' 
-            value={enteredAge} 
-            onChange={ageChangeHandler} 
+            ref={ageInputRef} 
           />
         <Button type='submit'>Add User</Button>
         </form>
